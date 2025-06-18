@@ -60,6 +60,7 @@ function Image() {
       }
     }
   };
+  console.log(loading);
 
   useEffect(() => {
     if (image && imgRef.current && canvasRef.current) {
@@ -114,7 +115,12 @@ function Image() {
       <h1 className={styles.title}>Nhận diện cảm xúc gương mặt</h1>
       <label className={styles.fileInput}>
         Chọn ảnh
-        <input type="file" accept="image/*" onChange={handleImageUpload} />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          disabled={loading}
+        />
       </label>
       {loading && <p className={styles.loading}>Đang xử lý...</p>}
       {image && (
