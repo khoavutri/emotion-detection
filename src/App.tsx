@@ -4,7 +4,7 @@ import Image from "./image/image";
 function App() {
   return (
     <>
-      <div className="app">
+      <div className="app" style={{ height: "100vh", overflow: "hidden" }}>
         <Routes>
           <Route path="/" element={<Image />} />
         </Routes>
