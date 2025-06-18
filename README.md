@@ -14,7 +14,7 @@
 
 ## 🌐 Demo
 
-🖥️ **Live Preview:** [https://personal-profile-six-kappa.vercel.app/](https://personal-profile-six-kappa.vercel.app/)
+🖥️ **Live Preview:** [https://emotion-detection-vert-theta.vercel.app/](https://emotion-detection-vert-theta.vercel.app/)
 
 ---
 
@@ -24,7 +24,7 @@ Follow these steps to get the project up and running locally:
 
 ```bash
 # Clone the repository
-git clone https://github.com/khoavutri/personal-profile.git
+git clone https://github.com/khoavutri/emotion-detection.git
 
 # Navigate to the project directory
 cd personal-profile
