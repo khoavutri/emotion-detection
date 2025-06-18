@@ -27,7 +27,7 @@ Follow these steps to get the project up and running locally:
 git clone https://github.com/khoavutri/emotion-detection.git
 
 # Navigate to the project directory
-cd personal-profile
+cd emotion-detection
 
 # Install dependencies
 npm install
@@ -44,8 +44,6 @@ This will launch the app at `http://localhost:5173` (or another port if configur
 # Build the project
 npm run build
 
-# Preview the production build
-npm run preview
 ```
 
 ---
