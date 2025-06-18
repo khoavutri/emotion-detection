@@ -60,7 +60,6 @@ function Image() {
       }
     }
   };
-  console.log(loading);
 
   useEffect(() => {
     if (image && imgRef.current && canvasRef.current) {
