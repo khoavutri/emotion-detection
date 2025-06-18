@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import * as faceapi from "face-api.js";
-import { detectEmotions } from "./faceDetection";
+import { detectEmotions, type Emotion } from "./faceDetection";
 import styles from "./style.module.scss";
 
 function Image() {
   const [image, setImage] = useState<string | null>(null);
-  const [emotions, setEmotions] = useState<string[]>([]);
+  const [emotions, setEmotions] = useState<Emotion[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -138,8 +138,12 @@ function Image() {
           <h2 className={styles.resultsTitle}>Kết quả:</h2>
           <ul className={styles.resultsList}>
             {emotions.map((emotion, index) => (
-              <li key={index} className={styles.resultItem}>
-                {emotion}
+              <li
+                key={index}
+                className={styles.resultItem}
+                style={{ color: emotion.data.color }}
+              >
+                {emotion.text}
               </li>
             ))}
           </ul>
