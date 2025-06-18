@@ -1,4 +1,4 @@
-# 🚀 My Amazing React-Vite Project
+# 🚀 Emotion detection
 
 📦 **Owned by:** [Vu Tri Khoa](https://github.com/khoavutri) ([GitLab](https://gitlab.com/khoavip07))
 
