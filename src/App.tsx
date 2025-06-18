@@ -5,7 +5,7 @@ import Streaming from "./streaming/streaming";
 function App() {
   return (
     <>
-      <div className="app" style={{ height: "100vh", overflow: "hidden" }}>
+      <div className="app" style={{ height: "100vh" }}>
         <Routes>
           <Route path="/" element={<Image />} />
           <Route path="/streaming" element={<Streaming />} />
