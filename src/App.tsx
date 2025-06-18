@@ -1,5 +1,6 @@
 import { Link, Route, Routes } from "react-router-dom";
 import Image from "./image/image";
+import Streaming from "./streaming/streaming";
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       <div className="app" style={{ height: "100vh", overflow: "hidden" }}>
         <Routes>
           <Route path="/" element={<Image />} />
+          <Route path="/streaming" element={<Streaming />} />
         </Routes>
         <div style={{ position: "fixed", bottom: 15, right: 15 }}>
           <Link
