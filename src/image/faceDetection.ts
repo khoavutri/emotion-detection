@@ -1,4 +1,5 @@
 import * as faceapi from 'face-api.js';
+import { statusIcons } from '../constant/emoji';
 
 export async function detectEmotions(file: File): Promise<string[]> {
     const img = await faceapi.bufferToImage(file);
@@ -8,12 +9,12 @@ export async function detectEmotions(file: File): Promise<string[]> {
         .withFaceExpressions();
 
     const emotions: string[] = [];
-    detections.forEach((detection, index) => {
+    detections.forEach((detection) => {
         const expressions: any = detection.expressions;
         const maxExpression = Object.keys(expressions).reduce((a, b) =>
             expressions[a] > expressions[b] ? a : b
         );
-        emotions.push(`Gương mặt ${index + 1}: ${maxExpression}`);
+        emotions.push(`Cảm xúc: ${maxExpression} ${statusIcons[maxExpression] || ""}`);
     });
 
     return emotions;
