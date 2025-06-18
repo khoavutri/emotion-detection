@@ -11,14 +11,16 @@ interface StatusIcon {
 interface StatusIcons {
   [key: string]: StatusIcon;
 }
+
 type Props = {};
 
-const Streaming = (_: Props) => {
+const Streaming: React.FC<Props> = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [status, setStatus] = useState<string>("...");
   const [emoji, setEmoji] = useState<string>("😐");
   const [bgColor, setBgColor] = useState<string>("#02c19c");
+  const [error, setError] = useState<string | null>(null);
 
   // Định nghĩa statusIcons
   const statusIcons: StatusIcons = {
@@ -32,33 +34,66 @@ const Streaming = (_: Props) => {
     surprised: { emoji: "😲", color: "#1230ce" },
   };
 
+  // Kiểm tra secure context
+  const isSecureContext = window.isSecureContext !== false; // true trên HTTPS hoặc localhost
+
   // Khởi động video từ webcam
   const startVideo = async () => {
-    if (!videoRef.current) return;
-
-    // Xử lý tương thích trình duyệt
-    if (!navigator.mediaDevices) {
-      (navigator as any).mediaDevices = {};
+    if (!videoRef.current) {
+      setError("Không tìm thấy phần tử video.");
+      return;
     }
 
-    if (!navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia = (
-        constraints: MediaStreamConstraints
-      ) => {
-        const getUserMedia =
-          (navigator as any).webkitGetUserMedia ||
-          (navigator as any).mozGetUserMedia;
-        if (!getUserMedia) {
-          return Promise.reject(
-            new Error("getUserMedia is not implemented in this browser")
-          );
+    // Kiểm tra secure context
+    if (!isSecureContext) {
+      setError(
+        "Webcam chỉ hoạt động trên HTTPS hoặc localhost. Vui lòng chạy ứng dụng trong secure context."
+      );
+      return;
+    }
+
+    // Kiểm tra sự tồn tại của navigator.mediaDevices
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      const getUserMedia =
+        (navigator as any).getUserMedia ||
+        (navigator as any).webkitGetUserMedia ||
+        (navigator as any).mozGetUserMedia;
+
+      if (!getUserMedia) {
+        setError("Trình duyệt của bạn không hỗ trợ truy cập webcam.");
+        return;
+      }
+
+      try {
+        const stream: any = await new Promise<MediaStream>(
+          (resolve, reject) => {
+            getUserMedia.call(
+              navigator,
+              { video: true },
+              (stream: MediaStream) => resolve(stream),
+              (err: Error) => reject(err)
+            );
+          }
+        );
+
+        if (videoRef.current) {
+          if ("srcObject" in videoRef.current) {
+            videoRef.current.srcObject = stream;
+          } else {
+            (videoRef.current as any).src = window.URL.createObjectURL(stream);
+          }
+          videoRef.current.onloadedmetadata = () => {
+            videoRef.current?.play();
+          };
         }
-        return new Promise((resolve, reject) => {
-          getUserMedia.call(navigator, constraints, resolve, reject);
-        });
-      };
+      } catch (err: any) {
+        setError(`Không thể truy cập webcam: ${err.message}`);
+        return;
+      }
+      return;
     }
 
+    // Sử dụng getUserMedia cho trình duyệt hiện đại
     try {
       const stream: any = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -73,22 +108,27 @@ const Streaming = (_: Props) => {
           videoRef.current?.play();
         };
       }
-    } catch (err) {
-      console.error("Error accessing webcam:", err);
+    } catch (err: any) {
+      setError(`Không thể truy cập webcam: ${err.message}`);
     }
   };
 
   // Tải mô hình và bắt đầu video
   useEffect(() => {
     const loadModels = async () => {
-      const modelUrl = "/models";
-      await Promise.all([
-        faceapi.nets.tinyFaceDetector.loadFromUri(modelUrl),
-        faceapi.nets.faceLandmark68Net.loadFromUri(modelUrl),
-        faceapi.nets.faceRecognitionNet.loadFromUri(modelUrl),
-        faceapi.nets.faceExpressionNet.loadFromUri(modelUrl),
-      ]);
-      await startVideo();
+      // Sử dụng URL công khai nếu không có mô hình local
+      const modelUrl = "/models"; // Thay bằng "https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights" nếu không có mô hình local
+      try {
+        await Promise.all([
+          faceapi.nets.tinyFaceDetector.loadFromUri(modelUrl),
+          faceapi.nets.faceLandmark68Net.loadFromUri(modelUrl),
+          faceapi.nets.faceRecognitionNet.loadFromUri(modelUrl),
+          faceapi.nets.faceExpressionNet.loadFromUri(modelUrl),
+        ]);
+        await startVideo();
+      } catch (err: any) {
+        setError(`Không thể tải mô hình face-api.js: ${err.message}`);
+      }
     };
     loadModels();
   }, []);
@@ -153,19 +193,25 @@ const Streaming = (_: Props) => {
     <div className={styles.app} style={{ backgroundColor: bgColor }}>
       <div className={styles.container}>
         <h1 className={styles.title}>Phát hiện biểu cảm khuôn mặt</h1>
-        <div className={styles.videoWrapper}>
-          <video
-            ref={videoRef}
-            width="640"
-            height="480"
-            autoPlay
-            muted
-            className={styles.video}
-          ></video>
-          <canvas ref={canvasRef} className={styles.canvas} />
-        </div>
-        <div className={styles.emoji}>{emoji}</div>
-        <div className={styles.status}>{status}</div>
+        {error ? (
+          <div className={styles.error}>{error}</div>
+        ) : (
+          <>
+            <div className={styles.videoWrapper}>
+              <video
+                ref={videoRef}
+                width="640"
+                height="480"
+                autoPlay
+                muted
+                className={styles.video}
+              ></video>
+              <canvas ref={canvasRef} className={styles.canvas} />
+            </div>
+            <div className={styles.emoji}>{emoji}</div>
+            <div className={styles.status}>{status}</div>
+          </>
+        )}
       </div>
     </div>
   );
