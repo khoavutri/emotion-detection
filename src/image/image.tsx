@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import * as faceapi from "face-api.js";
 import { detectEmotions, type Emotion } from "./faceDetection";
 import styles from "./style.module.scss";
-import { Link } from "react-router-dom";
 
 function Image() {
   const [image, setImage] = useState<string | null>(null);

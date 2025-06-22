@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
 import styles from "./style.module.scss";
 import { statusIcons } from "../constant/emoji";
-import { Link } from "react-router-dom";
 
 type Props = {};
 
