@@ -112,9 +112,9 @@ function Image() {
 
   return (
     <div className={styles.container}>
-      <Link to="/" className={styles.backLink}>
+      <a href="/" className={styles.backLink}>
         Quay về Trang Chủ
-      </Link>
+      </a>
       <h1 className={styles.title}>Nhận diện cảm xúc gương mặt</h1>
       <label className={styles.fileInput}>
         Chọn ảnh

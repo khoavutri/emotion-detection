@@ -172,9 +172,10 @@ const Streaming: React.FC<Props> = () => {
 
   return (
     <div className={styles.app} style={{ backgroundColor: bgColor }}>
-      <Link to="/" className={styles.backButton}>
+      <a href="/" className={styles.backButton}>
         Quay về Trang Chủ
-      </Link>
+      </a>
+
       <div className={styles.container}>
         <h1 className={styles.title}>Phát hiện biểu cảm khuôn mặt</h1>
         {error ? (
