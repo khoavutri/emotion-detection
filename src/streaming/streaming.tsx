@@ -151,7 +151,7 @@ const Streaming: React.FC<Props> = () => {
               }
             }
             setEmoji(statusIcons[maxStatus].emoji);
-            setStatus(maxStatus);
+            setStatus(statusIcons[maxStatus].text);
             setBgColor(statusIcons[maxStatus].color);
           });
         } else {

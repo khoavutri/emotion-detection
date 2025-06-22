@@ -19,7 +19,7 @@ export async function detectEmotions(file: File): Promise<Emotion[]> {
         const maxExpression = Object.keys(expressions).reduce((a, b) =>
             expressions[a] > expressions[b] ? a : b
         );
-        emotions.push({ text: `Cảm xúc: ${maxExpression} ${statusIcons[maxExpression]?.emoji || ""}`, data: statusIcons[maxExpression] });
+        emotions.push({ text: `Cảm xúc: ${statusIcons[maxExpression]?.text} ${statusIcons[maxExpression]?.emoji || ""}`, data: statusIcons[maxExpression] });
     });
 
     return emotions;
