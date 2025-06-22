@@ -18,15 +18,11 @@ const Streaming: React.FC<Props> = () => {
   const startVideo = async () => {
     if (!videoRef.current) {
       setError("Không tìm thấy phần tử video.");
-      alert("Không tìm thấy phần tử video.");
       return;
     }
 
     if (!isSecureContext) {
       setError(
-        "Webcam chỉ hoạt động trên HTTPS hoặc localhost. Vui lòng chạy ứng dụng trong secure context."
-      );
-      alert(
         "Webcam chỉ hoạt động trên HTTPS hoặc localhost. Vui lòng chạy ứng dụng trong secure context."
       );
       return;
@@ -88,7 +84,6 @@ const Streaming: React.FC<Props> = () => {
       }
     } catch (err: any) {
       setError(`Không thể truy cập webcam: ${err.message}`);
-      alert(`Không thể truy cập webcam: ${err.message}`);
     }
   };
 
@@ -105,7 +100,6 @@ const Streaming: React.FC<Props> = () => {
         await startVideo();
       } catch (err: any) {
         setError(`Không thể tải mô hình face-api.js: ${err.message}`);
-        alert(`Không thể tải mô hình face-api.js: ${err.message}`)
       }
     };
     loadModels();
