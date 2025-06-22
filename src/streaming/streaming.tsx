@@ -1,16 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
 import styles from "./style.module.scss";
-
-// Định nghĩa interface cho statusIcons
-interface StatusIcon {
-  emoji: string;
-  color: string;
-}
-
-interface StatusIcons {
-  [key: string]: StatusIcon;
-}
+import { statusIcons } from "../constant/emoji";
 
 type Props = {};
 
@@ -22,37 +13,25 @@ const Streaming: React.FC<Props> = () => {
   const [bgColor, setBgColor] = useState<string>("#02c19c");
   const [error, setError] = useState<string | null>(null);
 
-  // Định nghĩa statusIcons
-  const statusIcons: StatusIcons = {
-    default: { emoji: "😐", color: "#02c19c" },
-    neutral: { emoji: "😐", color: "#54adad" },
-    happy: { emoji: "😀", color: "#148f77" },
-    sad: { emoji: "😥", color: "#767e7e" },
-    angry: { emoji: "😠", color: "#b64518" },
-    fearful: { emoji: "😨", color: "#90931d" },
-    disgusted: { emoji: "🤢", color: "#1a8d1a" },
-    surprised: { emoji: "😲", color: "#1230ce" },
-  };
+  const isSecureContext = window.isSecureContext !== false;
 
-  // Kiểm tra secure context
-  const isSecureContext = window.isSecureContext !== false; // true trên HTTPS hoặc localhost
-
-  // Khởi động video từ webcam
   const startVideo = async () => {
     if (!videoRef.current) {
       setError("Không tìm thấy phần tử video.");
+      alert("Không tìm thấy phần tử video.");
       return;
     }
 
-    // Kiểm tra secure context
     if (!isSecureContext) {
       setError(
+        "Webcam chỉ hoạt động trên HTTPS hoặc localhost. Vui lòng chạy ứng dụng trong secure context."
+      );
+      alert(
         "Webcam chỉ hoạt động trên HTTPS hoặc localhost. Vui lòng chạy ứng dụng trong secure context."
       );
       return;
     }
 
-    // Kiểm tra sự tồn tại của navigator.mediaDevices
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       const getUserMedia =
         (navigator as any).getUserMedia ||
@@ -93,7 +72,6 @@ const Streaming: React.FC<Props> = () => {
       return;
     }
 
-    // Sử dụng getUserMedia cho trình duyệt hiện đại
     try {
       const stream: any = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -110,14 +88,13 @@ const Streaming: React.FC<Props> = () => {
       }
     } catch (err: any) {
       setError(`Không thể truy cập webcam: ${err.message}`);
+      alert(`Không thể truy cập webcam: ${err.message}`);
     }
   };
 
-  // Tải mô hình và bắt đầu video
   useEffect(() => {
     const loadModels = async () => {
-      // Sử dụng URL công khai nếu không có mô hình local
-      const modelUrl = "/models"; // Thay bằng "https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights" nếu không có mô hình local
+      const modelUrl = "/models";
       try {
         await Promise.all([
           faceapi.nets.tinyFaceDetector.loadFromUri(modelUrl),
@@ -128,19 +105,28 @@ const Streaming: React.FC<Props> = () => {
         await startVideo();
       } catch (err: any) {
         setError(`Không thể tải mô hình face-api.js: ${err.message}`);
+        alert(`Không thể tải mô hình face-api.js: ${err.message}`)
       }
     };
     loadModels();
   }, []);
 
-  // Xử lý phát hiện khuôn mặt khi video chạy
   useEffect(() => {
     if (!videoRef.current || !canvasRef.current) return;
-
     const video = videoRef.current;
     const canvas = canvasRef.current;
+    const newWidth = Math.min(500, document.documentElement.clientWidth - 20);
+    video.width = newWidth;
+    video.height = newWidth;
+    canvas.width = newWidth;
+    canvas.height = newWidth;
+    video.style.width = `${newWidth}px`;
+    video.style.height = `${newWidth}px`;
+    canvas.style.width = `${newWidth}px`;
+    canvas.style.height = `${newWidth}px`;
 
     const handlePlay = () => {
+      if (!canvas || !video) return;
       const displaySize = { width: video.width, height: video.height };
       faceapi.matchDimensions(canvas, displaySize);
 
