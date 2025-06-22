@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import * as faceapi from "face-api.js";
 import { detectEmotions, type Emotion } from "./faceDetection";
 import styles from "./style.module.scss";
+import { Link } from "react-router-dom";
 
 function Image() {
   const [image, setImage] = useState<string | null>(null);
@@ -111,6 +112,9 @@ function Image() {
 
   return (
     <div className={styles.container}>
+      <Link to="/" className={styles.backLink}>
+        Quay về Trang Chủ
+      </Link>
       <h1 className={styles.title}>Nhận diện cảm xúc gương mặt</h1>
       <label className={styles.fileInput}>
         Chọn ảnh

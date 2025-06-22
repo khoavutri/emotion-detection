@@ -10,6 +10,42 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    @keyframes rainbowShift {
+        0% {
+            background-position: 0%;
+        }
+
+        100% {
+            background-position: 200%;
+        }
+    }
+
+    .backLink {
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+        margin-bottom: 1rem;
+        display: inline-block;
+        background: linear-gradient(to right,
+                #ff4d4d,
+                #ff9500,
+                #ffcc00,
+                #00ff55,
+                #00b7ff,
+                #8a2be2,
+                #ff66cc,
+                #ff4d4d);
+        background-size: 200%;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        transition: background-position 0.3s ease;
+
+        &:hover {
+            animation: rainbowShift 3s linear infinite;
+        }
+    }
 }
 
 .title {

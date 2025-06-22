@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
 import styles from "./style.module.scss";
 import { statusIcons } from "../constant/emoji";
+import { Link } from "react-router-dom";
 
 type Props = {};
 
@@ -171,6 +172,9 @@ const Streaming: React.FC<Props> = () => {
 
   return (
     <div className={styles.app} style={{ backgroundColor: bgColor }}>
+      <Link to="/" className={styles.backButton}>
+        Quay về Trang Chủ
+      </Link>
       <div className={styles.container}>
         <h1 className={styles.title}>Phát hiện biểu cảm khuôn mặt</h1>
         {error ? (
